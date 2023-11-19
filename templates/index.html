@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        input[type="text"] {
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #3498db;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+    </style>
+    <script>
+        function toggleTaskCompletion(index) {
+            var spanElement = document.getElementById("task-" + index);
+            spanElement.classList.toggle("completed");
+        }
+    </script>
+</head>
+<body>
+    <h1>Todos</h1>
+    <ul>
+        {% for todo in todos %}
+        <li>
+            <input type="checkbox" name="done" {% if todo['done'] %} checked {%endif%} disabled>
+            <span id="task-{{ loop.index0 }}" {% if todo['done'] %} class="completed" {% endif %}>{{ todo['task'] }}</span>
+            <a href="javascript:void(0);" onclick="toggleTaskCompletion({{ loop.index0 }})">Check</a>
+            <a href="{{ url_for('edit', index=loop.index0)}}">Edit</a>
+            <a href="{{ url_for('delete', index=loop.index0)}}">Delete</a>
+        </li> 
+        {% endfor %}
+    </ul>
+    <form action="{{ url_for('add') }}" method="post">
+        <input type="text" name="todo" placeholder="Enter your task">
+        <button type="submit">Add Todo</button>
+    </form>
+</body>
+</html>
